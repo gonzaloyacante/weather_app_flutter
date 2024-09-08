@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import './toggle_theme_button.dart';
 
 class WeatherAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final String cityName;
+  final String city;
+  final String country;
   final bool isDarkMode;
   final ValueChanged<bool> onDarkModeChanged;
+  final ValueChanged<String> onCitySelected;
 
   const WeatherAppBar({
     super.key,
-    required this.cityName,
+    required this.city,
+    required this.country,
     required this.isDarkMode,
     required this.onDarkModeChanged,
+    required this.onCitySelected,
   });
 
   @override
@@ -37,8 +41,11 @@ class _WeatherAppBarState extends State<WeatherAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    String cityAndCountry = widget.city.isEmpty
+        ? "Ingrese una ciudad"
+        : "${widget.city}, ${widget.country}";
     return AppBar(
-      title: Text(widget.cityName),
+      title: Text(cityAndCountry),
       actions: [
         IconButton(
           icon: const Icon(Icons.search),
@@ -47,7 +54,7 @@ class _WeatherAppBarState extends State<WeatherAppBar> {
               context: context,
               delegate: CitySearchDelegate(
                 onCitySelected: (city) {
-                  _searchController.text = city;
+                  widget.onCitySelected(city); // Pasa la ciudad seleccionada
                 },
               ),
             );
@@ -55,13 +62,9 @@ class _WeatherAppBarState extends State<WeatherAppBar> {
         ),
         Tooltip(
           message: 'Change brightness mode',
-          child: IconButton(
-            isSelected: widget.isDarkMode,
-            onPressed: () {
-              widget.onDarkModeChanged(!widget.isDarkMode);
-            },
-            icon: const Icon(Icons.wb_sunny_outlined),
-            selectedIcon: const Icon(Icons.brightness_2_outlined),
+          child: ToggleModeButton(
+            isDarkMode: widget.isDarkMode,
+            onDarkModeChanged: widget.onDarkModeChanged,
           ),
         ),
       ],
@@ -78,9 +81,9 @@ class CitySearchDelegate extends SearchDelegate<String> {
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(Icons.close),
         onPressed: () {
-          query = '';
+          close(context, '');
         },
       ),
     ];
@@ -89,9 +92,9 @@ class CitySearchDelegate extends SearchDelegate<String> {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.volume_up),
+      icon: const Icon(Icons.delete),
       onPressed: () {
-        close(context, '');
+        query = '';
       },
     );
   }

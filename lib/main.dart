@@ -32,6 +32,8 @@ class _WeatherAppState extends State<WeatherApp> {
     );
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Weather App",
       theme: themeData,
       home: const HomeScreen(),
     );
