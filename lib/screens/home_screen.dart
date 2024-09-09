@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import '../models/weather_model.dart';
-import '../services/weather_service.dart';
-import '../widgets/app_bar.dart';
-import '../main.dart'; // Importa el archivo principal para acceder al estado del tema
+import '../main.dart';
+
+import '../models/current_weather_model.dart';
+import '../models/hourly_weather_model.dart';
+import '../models/daily_weather_model.dart';
+import '../services/weather_api_service.dart';
+import '../widgets/app_bar_widget.dart';
+import '../widgets/current_weather_widget.dart';
+import '../widgets/hourly_forecast_widget.dart';
+import '../widgets/daily_forecast_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,17 +18,31 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  WeatherModel? _weather;
+  CurrentWeatherModel? _currentWeather;
+  List<HourlyWeatherModel>? _hourlyForecast;
+  List<DailyWeatherModel>? _dailyForecast;
   final WeatherService _weatherService = WeatherService();
+  bool _isLoading = false;
 
-  // Método para obtener el clima basado en la ciudad ingresada
   void _fetchWeather(String city) async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      final weather = await _weatherService.getWeather(city);
+      final currentWeather = await _weatherService.getCurrentWeather(city);
+      final hourlyForecast = await _weatherService.getHourlyForecast(city);
+      final dailyForecast = await _weatherService.getDailyForecast(city);
       setState(() {
-        _weather = weather;
+        _currentWeather = currentWeather;
+        _hourlyForecast = hourlyForecast;
+        _dailyForecast = dailyForecast;
+        _isLoading = false;
       });
     } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error al obtener el clima')),
       );
@@ -31,7 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void updateCity(String newCity) {
     setState(() {
-      _weather = null;
+      _currentWeather = null;
+      _hourlyForecast = null;
+      _dailyForecast = null;
     });
     _fetchWeather(newCity);
   }
@@ -40,9 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WeatherAppBar(
-        // city: _weather?.city ?? 'Ingrese una ciudad',
-        city: _weather?.city ?? '',
-        country: _weather?.country ?? '',
+        city: _currentWeather?.city ?? '',
+        country: _currentWeather?.country ?? '',
         isDarkMode: WeatherApp.of(context)?.isDark ?? false,
         onDarkModeChanged: (isDarkMode) {
           WeatherApp.of(context)?.toggleTheme();
@@ -51,31 +72,35 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            if (_weather != null) ...[
-              Text(
-                '${_weather!.temperature}°C',
-                style:
-                    const TextStyle(fontSize: 56, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                _weather!.description,
-                style: const TextStyle(fontSize: 18),
-              ),
-              Image.network('http:${_weather!.icon}'),
-            ] else ...[
-              const Center(
-                child: Text(
-                  'Ingrese una ciudad para ver el clima',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (_isLoading)
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              if (_currentWeather != null &&
+                  _hourlyForecast != null &&
+                  _dailyForecast != null) ...[
+                CurrentWeather(weather: _currentWeather!),
+                HourlyForecast(hourlyWeather: _hourlyForecast!),
+                DailyForecast(dailyWeather: _dailyForecast!),
+              ],
+              if (!_isLoading &&
+                  _currentWeather == null &&
+                  _hourlyForecast == null &&
+                  _dailyForecast == null)
+                const Center(
+                  child: Text(
+                    'Ingrese una ciudad para ver el clima',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 28,
+                    ),
                   ),
                 ),
-              ),
             ],
-          ],
+          ),
         ),
       ),
     );
