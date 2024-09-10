@@ -10,13 +10,13 @@ class DailyForecast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final DateFormat dateFormat = DateFormat('dd / MM');
+    final DateFormat dateFormat = DateFormat('dd/MM');
 
     return Column(
       children: dailyWeather.map((day) {
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 8.0),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
           decoration: BoxDecoration(
             color: isDarkMode ? Colors.grey[900] : Colors.grey[100],
             borderRadius: BorderRadius.circular(15),
@@ -29,42 +29,41 @@ class DailyForecast extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    dateFormat.format(day.day),
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black87,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+          child: ExpansionTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  dateFormat.format(day.day),
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '${day.high}° / ${day.low}°',
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white70 : Colors.black54,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        '${day.high}° / ${day.low}°',
-                        style: TextStyle(
-                          color: isDarkMode ? Colors.white70 : Colors.black54,
-                          fontSize: 16,
-                        ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: Image.network(
+                        'http:${day.icon}',
+                        fit: BoxFit.cover,
                       ),
-                      const SizedBox(width: 8),
-                      SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Image.network(
-                          'http:${day.icon}',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            children: [
               const SizedBox(height: 8),
               Text(
                 day.condition,
