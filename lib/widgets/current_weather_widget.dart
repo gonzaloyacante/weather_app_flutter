@@ -29,8 +29,8 @@ class CurrentWeather extends StatelessWidget {
               ],
             ),
             SizedBox(
-              width: 120,
-              height: 120,
+              width: 100,
+              height: 100,
               child: Image.network(
                 'http:${weather.icon}',
                 fit: BoxFit.cover,
