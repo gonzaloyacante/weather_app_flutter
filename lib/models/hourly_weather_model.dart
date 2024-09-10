@@ -1,5 +1,3 @@
-// lib/models/hourly_weather_model.dart
-
 class HourlyWeatherModel {
   final String time;
   final double temperature;

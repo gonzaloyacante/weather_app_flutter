@@ -9,8 +9,8 @@ class WeatherService {
   final String baseUrl = 'http://api.weatherapi.com/v1';
 
   Future<CurrentWeatherModel> getCurrentWeather(String city) async {
-    final response =
-        await http.get(Uri.parse('$baseUrl/current.json?key=$apiKey&q=$city'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/current.json?key=$apiKey&q=$city&lang=es'));
 
     if (response.statusCode == 200) {
       return CurrentWeatherModel.fromJson(json.decode(response.body));
@@ -20,8 +20,8 @@ class WeatherService {
   }
 
   Future<List<HourlyWeatherModel>> getHourlyForecast(String city) async {
-    final response = await http
-        .get(Uri.parse('$baseUrl/forecast.json?key=$apiKey&q=$city&hours=24'));
+    final response = await http.get(Uri.parse(
+        '$baseUrl/forecast.json?key=$apiKey&q=$city&hours=24&lang=es'));
 
     if (response.statusCode == 200) {
       List<dynamic> hourlyData =
@@ -35,8 +35,8 @@ class WeatherService {
   }
 
   Future<List<DailyWeatherModel>> getDailyForecast(String city) async {
-    final response = await http
-        .get(Uri.parse('$baseUrl/forecast.json?key=$apiKey&q=$city&days=7'));
+    final response = await http.get(Uri.parse(
+        '$baseUrl/forecast.json?key=$apiKey&q=$city&days=10&lang=es'));
 
     if (response.statusCode == 200) {
       List<dynamic> dailyData =

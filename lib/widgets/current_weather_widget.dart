@@ -1,5 +1,3 @@
-// lib/widgets/current_weather.dart
-
 import 'package:flutter/material.dart';
 import '../models/current_weather_model.dart';
 
@@ -24,26 +22,35 @@ class CurrentWeather extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 56, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 8), // Espacio entre los textos
                 Text(
                   weather.description,
                   style: const TextStyle(fontSize: 18),
                 ),
               ],
             ),
-            const SizedBox(width: 16), // Espacio entre la columna y la imagen
-            Image.network('http:${weather.icon}'),
+            SizedBox(
+              width: 120,
+              height: 120,
+              child: Image.network(
+                'http:${weather.icon}',
+                fit: BoxFit.cover,
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 16), // Espacio entre las filas
+        const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Column(
               children: [
                 Row(children: [
-                  const Icon(Icons.thermostat_outlined),
-                  const SizedBox(width: 4), // Espacio entre el icono y el texto
+                  const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Icon(Icons.thermostat_outlined),
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     'Sensación: ${weather.feelsLike}°C',
                     style: TextStyle(
@@ -51,10 +58,14 @@ class CurrentWeather extends StatelessWidget {
                     ),
                   ),
                 ]),
-                const SizedBox(height: 8), // Espacio entre las filas internas
+                const SizedBox(height: 8),
                 Row(children: [
-                  const Icon(Icons.air),
-                  const SizedBox(width: 4), // Espacio entre el icono y el texto
+                  const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Icon(Icons.air),
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     'Viento: ${weather.windSpeed} km/h',
                     style: TextStyle(
@@ -64,12 +75,16 @@ class CurrentWeather extends StatelessWidget {
                 ]),
               ],
             ),
-            const SizedBox(width: 16), // Espacio entre las columnas
+            const SizedBox(width: 16),
             Column(
               children: [
                 Row(children: [
-                  const Icon(Icons.cloud_outlined),
-                  const SizedBox(width: 4), // Espacio entre el icono y el texto
+                  const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Icon(Icons.cloud_outlined),
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     'Nubes: ${weather.cloudiness}%',
                     style: TextStyle(
@@ -77,10 +92,14 @@ class CurrentWeather extends StatelessWidget {
                     ),
                   ),
                 ]),
-                const SizedBox(height: 8), // Espacio entre las filas internas
+                const SizedBox(height: 8),
                 Row(children: [
-                  const Icon(Icons.water_drop_outlined),
-                  const SizedBox(width: 4), // Espacio entre el icono y el texto
+                  const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Icon(Icons.water_drop_outlined),
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     'Humedad: ${weather.humidity}%',
                     style: TextStyle(

@@ -1,5 +1,3 @@
-// lib/models/current_weather_model.dart
-
 class CurrentWeatherModel {
   final String city;
   final String country;
@@ -10,6 +8,9 @@ class CurrentWeatherModel {
   final double windSpeed;
   final int cloudiness;
   final int humidity;
+  final int sunrise;
+  final int sunset;
+  final int timestamp;
 
   CurrentWeatherModel({
     required this.city,
@@ -21,6 +22,9 @@ class CurrentWeatherModel {
     required this.windSpeed,
     required this.cloudiness,
     required this.humidity,
+    required this.sunrise,
+    required this.sunset,
+    required this.timestamp,
   });
 
   factory CurrentWeatherModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,9 @@ class CurrentWeatherModel {
       windSpeed: (json['current']['wind_kph'] ?? 0.0).toDouble(),
       cloudiness: json['current']['cloud'] ?? 0,
       humidity: json['current']['humidity'] ?? 0,
+      sunrise: json['current']['sunrise'] ?? 0,
+      sunset: json['current']['sunset'] ?? 0,
+      timestamp: json['current']['timestamp'] ?? 0,
     );
   }
 }
